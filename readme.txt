@@ -8,11 +8,11 @@ Tested up to: 3.6.1
 Stable tag: 1.0
 
 
-Tagline Here
+Create & manage new ad placements in seconds - no coding required
 
 == Description ==
 
-AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher’s existing ad inventory or through AppendAd's certified ad networks.
+AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd's certified ad networks.
 
 
 == Installation ==
