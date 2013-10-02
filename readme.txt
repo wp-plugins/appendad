@@ -43,7 +43,7 @@ Initial release
 
 = 1.0.1 =
 * Addeded a Settings link from the Plugins page for quick navigation
-* moved the plugin menu item location from the Plugins to the Settings section
+* Moved the plugin menu item location from the Plugins to the Settings section
 * Fixed some notices that can appear in when Apache error reporting is set to On
 
 = 1.0 =
