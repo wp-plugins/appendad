@@ -9,7 +9,7 @@ Author URI: http://www.appendad.com/
 
 // Add settings link on plugin page
 function your_plugin_settings_link($links) { 
-  $settings_link = '<a href="plugins.php?page=appendad">Settings</a>'; 
+  $settings_link = '<a href="options-general.php?page=appendad">Settings</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
 }
