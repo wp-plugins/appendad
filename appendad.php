@@ -7,10 +7,18 @@ Author: AppendAd
 Author URI: http://www.appendad.com/
 */
 
-
+// Add settings link on plugin page
+function your_plugin_settings_link($links) { 
+  $settings_link = '<a href="plugins.php?page=appendad">Settings</a>'; 
+  array_unshift($links, $settings_link); 
+  return $links; 
+}
+ 
+$plugin = plugin_basename(__FILE__); 
+add_filter("plugin_action_links_$plugin", 'your_plugin_settings_link' );
 
 //get the settings from database
-$ssb = get_option(ssb_options);
+$ssb = get_option("ssb_options");
 
 //activate/de-activate hooks
 //dont change it, its required
@@ -25,10 +33,9 @@ add_action('admin_menu', 'ssb_settings');
 //adding a page link in admin panel
 function ssb_settings()
 {
-	add_plugins_page( "AppendAd", "AppendAd", 'administrator', 'appendad', 'ssb_admin_function');
+	add_options_page( "AppendAd", "AppendAd", 'administrator', 'appendad', 'ssb_admin_function');
 	//this adds the page: parameters are: "page title", "link title", "role", "slug","function that shows the result"
 }
-
 
 
 
@@ -48,7 +55,7 @@ function ssb_output()
 {
 
 //get the settings from database
-$ssb = get_option(ssb_options);
+$ssb = get_option("ssb_options");
 
 //adding the script result in a variable
 $output = "";
@@ -96,7 +103,7 @@ function ssb_admin_function()
 	if(!current_user_can('manage_options'))
 		wp_die('You do not have sufficient permissions to access this page.');
 		//die if not allowed
-	$ssb = get_option(ssb_options); //get saved settings to initially show in form
+	$ssb = get_option("ssb_options"); //get saved settings to initially show in form
 	//here starts the html of form, cant document the html (Do you really need this ? do you!)
 	?>
 		<div class="wrap">
