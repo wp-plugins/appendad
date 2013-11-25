@@ -5,7 +5,7 @@ Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
 Donate link: http://vasuchawla.com/
 Tested up to: 3.7.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 
 Create & manage new ad placements in seconds - no coding required
@@ -33,6 +33,9 @@ For any questions and support contact us at info@appendad.com
 
 == Upgrade Notice ==
 
+= 1.0.2 =
+Fixed broken link in the Installed Plugins page 
+
 = 1.0.1 =
 Bug fix and navigation improvements
 
@@ -45,6 +48,9 @@ Initial release
 * Addeded a Settings link from the Plugins page for quick navigation
 * Moved the plugin menu item location from the Plugins to the Settings section
 * Fixed some notices that can appear in when Apache error reporting is set to On
+
+= 1.0.2 =
+* Fixed broken link in the Installed Plugins page
 
 = 1.0 =
 * Initial release
