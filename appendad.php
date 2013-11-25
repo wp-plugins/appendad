@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: AppendAd
 Plugin URI: http://www.appendad.com/
-Version: 1.0.1
+Version: 1.0.2
 Description: AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd certified ad networks.
 Author: AppendAd
 Author URI: http://www.appendad.com/
