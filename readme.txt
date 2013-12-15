@@ -4,7 +4,7 @@ Donate link:
 Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
 Donate link: http://vasuchawla.com/
-Tested up to: 3.7.1
+Tested up to: 3.8
 Stable tag: 1.0.2
 
 
