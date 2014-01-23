@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: AppendAd
 Plugin URI: http://www.appendad.com/
-Version: 1.0.2
+Version: 1.1.0
 Description: AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd certified ad networks.
 Author: AppendAd
 Author URI: http://www.appendad.com/
@@ -42,8 +42,10 @@ function ssb_settings()
 //conditional printing the script based on synchronous or asynchronous
 if($ssb['synca']=="async"){
 	add_action( 'wp_footer', 'ssb_output_g' ); // if asynchronous then in footer
+	add_action( 'wp_footer', 'ssb_page_data' );
 }elseif($ssb['synca']=="sync"){
 	add_action( 'wp_head', 'ssb_output_g' ); //else if synchronous then in header
+        add_action( 'wp_footer', 'ssb_page_data' );
 }else  {
 	print_r($ssb);
 }
@@ -54,45 +56,87 @@ if($ssb['synca']=="async"){
 function ssb_output()
 {
 
-//get the settings from database
-$ssb = get_option("ssb_options");
+    //get the settings from database
+    $ssb = get_option("ssb_options");
 
-//adding the script result in a variable
-$output = "";
-$output .= "<script>
-(function(){
-";
+    //adding the script result in a variable
+    $output = "<!-- AppendAd Site Tag - Start -->\n";
+    $output .= "<script>
+    (function(){
+    ";
 
-/// condition showing of script according to settings saved
-if($ssb['acceler']=="true")
-$output .="var apd_accelerate=1;
-";
+    /// condition showing of script according to settings saved
+    if($ssb['acceler']=="true")
+    $output .="var apd_accelerate=1;
+    ";
 
-/// condition showing of script according to settings saved
-if($ssb['dynmic']=="true")
-$output .="var apd_disabledynamic=1;
-";
+    /// condition showing of script according to settings saved
+    if($ssb['dynmic']=="true")
+    $output .="var apd_disabledynamic=1;
+    ";
 
-$output .="var apd = document.createElement('script');
-apd.type = 'text/javascript'; apd.async = true;
-apd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id=";
+    $output .="var apd = document.createElement('script');
+    apd.type = 'text/javascript'; apd.async = true;
+    apd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id=";
 
-//adding of site id in output
-$output .= $ssb['site_id'];
+    //adding of site id in output
+    $output .= $ssb['site_id'];
 
 
-$output .="';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();</script>";
+    $output .="';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();</script>";
+    
+     $output .= "\n<!-- AppendAd Site Tag - End -->\n\n";
+    //outpur created, now returning it back to the calling element !
+    return $output;
 
-//outpur created, now returning it back to the calling element !
-return $output;
+}
 
+function ssb_page_data_demo() {
+    $output = "\n" . '<!-- AppendAd Targeting - Start -->
+<div id="apdPageData" style="display:none;visibility:hidden;">
+<span id="apdPageData_categories">[categories]</span>
+<span id="apdPageData_tags">[tags]</span>
+<span id="apdPageData_author">[author]</span>
+</div>
+<!-- AppendAd Targeting - End -->';
+    
+    echo $output;
+}
+
+
+function ssb_page_data() {
+    global $post;
+        
+    //Returns All category Items
+    $term_array = wp_get_post_terms($post->ID, 'category', array("fields" => "names"));
+    $category_list = ( empty($term_array) OR is_wp_error($term_array) ) ? '' : implode(',', $term_array);
+    
+    //Returns Array of Tag Names
+    $term_array = wp_get_post_terms($post->ID, 'post_tag', array("fields" => "names"));
+    $tag_list = ( empty($term_array) OR is_wp_error($term_array) ) ? '' : implode(',', $term_array);
+    
+    $display_name = get_the_author_meta('display_name');
+    $display_name = ( empty($display_name) OR is_wp_error($display_name) ) ? '' : $display_name;
+    
+    $output  = "\n" . '<!-- AppendAd Targeting - Start -->';
+    $output .= "\n" . '<div id="apdPageData" style="display:none;visibility:hidden;">';  
+    $output .= "\n\t" . '<span id="apdPageData_categories">' . $category_list . '</span>';
+    
+    if(is_single()) {
+        $output .= "\n\t" . '<span id="apdPageData_tags">' . $tag_list . '</span>';
+        $output .= "\n\t" . '<span id="apdPageData_author">' . $display_name . '</span>';
+    }
+    
+    $output .= "\n" . "</div>\n<!-- AppendAd Targeting - End -->";
+    
+    echo $output;
 }
 
 
 //this echo's the code
 function ssb_output_g()
 {
-	echo ssb_output();
+    echo ssb_output();
 }
 
 
@@ -161,7 +205,7 @@ function ssb_admin_function()
 				<div id="setting-error-settings_updated" class="updated settings-error asd_saved" style="display:none; width: 76%;"><p><strong>Settings saved.</strong></p></div><p>Click <a href="#"> here </a> to access our current Ad Placement gallery and create a new placement</p>
 
 				<p>The following code will be embedded in your site's template:<br />
-<textarea style="width: 77%;height: 142px;" class="result_demo"><?php  echo htmlentities(ssb_output());?></textarea></p>
+<textarea style="width: 77%;height: 342px;" class="result_demo"><?php  echo htmlentities(ssb_output());echo htmlentities(ssb_page_data_demo());?></textarea></p>
 		</div>
 	<?php
 }
