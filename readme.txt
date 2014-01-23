@@ -45,6 +45,11 @@ Bug fix and navigation improvements
 Initial release
 
 == Changelog ==
+= 1.1.0 =
+Added support for targeting placements by author, tags and categories
+
+= 1.0.2 =
+Fixed broken link in the Installed Plugins page 
 
 = 1.0.1 =
 * Addeded a Settings link from the Plugins page for quick navigation
