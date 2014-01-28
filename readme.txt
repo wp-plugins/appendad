@@ -32,7 +32,7 @@ For any questions and support contact us at info@appendad.com
 
 == Upgrade Notice ==
 = 1.1.1 =
-Added plugin and WordPress version indicators 
+Added plugin and WordPress version indicators
 
 = 1.1.0 =
 Added support for targeting placements by author, tags and categories
@@ -47,6 +47,9 @@ Bug fix and navigation improvements
 Initial release
 
 == Changelog ==
+= 1.1.1 =
+Added plugin and WordPress version indicators
+
 = 1.1.0 =
 Added support for targeting placements by author, tags and categories
 
