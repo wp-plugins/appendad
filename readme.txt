@@ -3,9 +3,8 @@ Contributors: AppendAd
 Donate link:
 Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
-Donate link: http://vasuchawla.com/
-Tested up to: 3.8
-Stable tag: 1.1.0
+Tested up to: 3.8.1
+Stable tag: 1.1.1
 
 
 Create & manage new ad placements in seconds - no coding required
@@ -32,6 +31,9 @@ AppendAd is the first platform that enables publishers to create new ad placemen
 For any questions and support contact us at info@appendad.com
 
 == Upgrade Notice ==
+= 1.1.1 =
+Added plugin and WordPress version indicators 
+
 = 1.1.0 =
 Added support for targeting placements by author, tags and categories
 

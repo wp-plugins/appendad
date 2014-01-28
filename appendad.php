@@ -1,11 +1,17 @@
 <?php
 /* Plugin Name: AppendAd
 Plugin URI: http://www.appendad.com/
-Version: 1.1.0
+Version: 1.1.1
 Description: AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd certified ad networks.
 Author: AppendAd
 Author URI: http://www.appendad.com/
 */
+
+
+/*
+ * Update this variable to modify plugin version text in actual site tag 
+ */
+$pluginVersion = '1.1.1';
 
 // Add settings link on plugin page
 function your_plugin_settings_link($links) { 
@@ -60,30 +66,28 @@ function ssb_output()
     $ssb = get_option("ssb_options");
 
     //adding the script result in a variable
-    $output = "<!-- AppendAd Site Tag - Start -->\n";
-    $output .= "<script>
-    (function(){
-    ";
+    $output = "\n<!-- AppendAd Site Tag - Start -->\n";
+    $output .= "<script>\n(function(){\n";
 
     /// condition showing of script according to settings saved
-    if($ssb['acceler']=="true")
-    $output .="var apd_accelerate=1;
-    ";
-
+    if($ssb['acceler'] == "true"){ 
+        $output .= "var apd_accelerate=1;\n";
+    }
+    
     /// condition showing of script according to settings saved
-    if($ssb['dynmic']=="true")
-    $output .="var apd_disabledynamic=1;
-    ";
+    if($ssb['dynmic'] == "true"){
+        $output .="var apd_disabledynamic=1;\n";
+    }
 
-    $output .="var apd = document.createElement('script');
-    apd.type = 'text/javascript'; apd.async = true;
-    apd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id=";
+    $output .= "var apd = document.createElement('script');"
+            . "\napd.type = 'text/javascript'; apd.async = true;"
+            . "\napd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id=";
 
     //adding of site id in output
     $output .= $ssb['site_id'];
 
 
-    $output .="';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();</script>";
+    $output .= "';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();</script>";
     
      $output .= "\n<!-- AppendAd Site Tag - End -->\n\n";
     //outpur created, now returning it back to the calling element !
@@ -92,20 +96,20 @@ function ssb_output()
 }
 
 function ssb_page_data_demo() {
-    $output = "\n" . '<!-- AppendAd Targeting - Start -->
-<div id="apdPageData" style="display:none;visibility:hidden;">
-<span id="apdPageData_categories">[categories]</span>
-<span id="apdPageData_tags">[tags]</span>
-<span id="apdPageData_author">[author]</span>
-</div>
-<!-- AppendAd Targeting - End -->';
+    global $pluginVersion, $wp_version;
+    $output = "<!-- AppendAd Targeting - Start -->"
+            . "<div id='apdPageData' data-plugin-version='$pluginVersion' data-wp-version='$wp_version' style='display:none;visibility:hidden;'>"
+            . "<span id='apdPageData_categories'>[categories]</span>"
+            . "<span id='apdPageData_tags'>[tags]</span>"
+            . "<span id='apdPageData_author'>[author]</span>"
+            . "</div><!-- AppendAd Targeting - End -->";
     
     echo $output;
 }
 
 
 function ssb_page_data() {
-    global $post;
+    global $post, $pluginVersion, $wp_version;
         
     //Returns All category Items
     $term_array = wp_get_post_terms($post->ID, 'category', array("fields" => "names"));
@@ -118,8 +122,8 @@ function ssb_page_data() {
     $display_name = get_the_author_meta('display_name');
     $display_name = ( empty($display_name) OR is_wp_error($display_name) ) ? '' : $display_name;
     
-    $output  = "\n" . '<!-- AppendAd Targeting - Start -->';
-    $output .= "\n" . '<div id="apdPageData" style="display:none;visibility:hidden;">';  
+    $output  = '<!-- AppendAd Targeting - Start -->';
+    $output .= "\n" . '<div id="apdPageData" data-plugin-version="' . $pluginVersion . '" data-wp-version="' . $wp_version . '" style="display:none;visibility:hidden;">';  
     $output .= "\n\t" . '<span id="apdPageData_categories">' . $category_list . '</span>';
     
     if(is_single()) {
@@ -127,7 +131,7 @@ function ssb_page_data() {
         $output .= "\n\t" . '<span id="apdPageData_author">' . $display_name . '</span>';
     }
     
-    $output .= "\n" . "</div>\n<!-- AppendAd Targeting - End -->";
+    $output .= "\n" . "</div>\n<!-- AppendAd Targeting - End -->\n";
     
     echo $output;
 }
@@ -189,7 +193,7 @@ function ssb_admin_function()
 					<tr valign="top">
 						<th scope="row">
 							<label for="dynamic_vas">
-								Disable Checking for dynamic elements:
+								Disable check for dynamic elements:
 							</label>
 						</th>
 						<td>
@@ -205,7 +209,7 @@ function ssb_admin_function()
 				<div id="setting-error-settings_updated" class="updated settings-error asd_saved" style="display:none; width: 76%;"><p><strong>Settings saved.</strong></p></div><p>Click <a href="#"> here </a> to access our current Ad Placement gallery and create a new placement</p>
 
 				<p>The following code will be embedded in your site's template:<br />
-<textarea style="width: 77%;height: 342px;" class="result_demo"><?php  echo htmlentities(ssb_output());echo htmlentities(ssb_page_data_demo());?></textarea></p>
+<textarea style="width: 77%;height: 280px;" class="result_demo"><?php echo htmlentities(ssb_output());echo htmlentities(ssb_page_data_demo());?></textarea></p>
 		</div>
 	<?php
 }
@@ -213,31 +217,33 @@ function ssb_admin_function()
 // this will add javascript in admin required for ajax
 add_action( 'admin_footer', 'ssb_ajax_javascript' );
 function ssb_ajax_javascript() {
+    
 ?>
 <script type="text/javascript" >
+    var tags = "<?=ssb_page_data_demo()?>";
+    //this function is providing the functionality of live realtime change of code in textarea
+    function chTXT(){
+                //saving to variables
+        var tmp_dynamic_vas = document.getElementById('dynamic_vas').checked;
+        var tmp_acceler_vas = document.getElementById('acceler_vas').checked;
+        var tmp_async = document.getElementById('parm2').checked;
+        var tmp_synch_vas = jQuery('input:radio[name=sync_async_vas]:checked').val();
+        var tmp_site_id_vas = document.getElementById('site_id_vas').value;
+        
+        var output = "<!-- AppendAd Site Tag - Start -->\n&lt;scri"+"pt\&gt;\n(function(){\n";
+        if(tmp_acceler_vas){
+                output= output+ "var apd_accelerate=1;\n";
+        }
+        if(tmp_dynamic_vas){
+                output= output+ "var apd_disabledynamic=1;\n";
+        }
+        output = output+ "var apd = document.createElement('script');\napd.type = 'text/javascript'; apd.async = true;\napd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id="+tmp_site_id_vas+"';";
 
-//this function is providing the functionality of live realtime change of code in textarea
-	function chTXT(){
-		//saving to variables
-	var tmp_dynamic_vas = document.getElementById('dynamic_vas').checked;
-	var tmp_acceler_vas = document.getElementById('acceler_vas').checked;
-	var tmp_synch_vas = jQuery('input:radio[name=sync_async_vas]:checked').val();
-	var tmp_site_id_vas = document.getElementById('site_id_vas').value;
-	var output="";
-	output= output+ "&lt;scri"+"pt\&gt;\n(function(){\n";
-		if(tmp_acceler_vas){
-			output= output+ "var apd_accelerate=1;\n";
-		}
-		if(tmp_dynamic_vas){
-			output= output+ "var apd_disabledynamic=1;\n";
-		}
-		output = output+ "var apd = document.createElement('script');\napd.type = 'text/javascript'; apd.async = true;\napd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id="+tmp_site_id_vas+"';";
+        output=output+ "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();&lt;/scr"+"ipt\&gt;" + '\n<!-- AppendAd Site Tag - End -->\n\n' + tags;
 
-	output=output+ "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();&lt;/scr"+"ipt\&gt;";
+        jQuery('.result_demo').html(output);
 
-	jQuery('.result_demo').html(output);
-
-}
+    }
 
 //jquery document ready call
 jQuery(document).ready(function($)
@@ -272,7 +278,7 @@ jQuery(document).ready(function($)
 			$.post(ajaxurl, data, function(response)
 			{
 				//show the response in teatarea
-				$('.result_demo').html(response);
+				$('.result_demo').html(response.trim() + "\n\n" + tags);
 				//show "saved" message
 				$('.asd_saved').show('slow');
 			});
