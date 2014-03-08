@@ -50,6 +50,9 @@ Bug fix and navigation improvements
 Initial release
 
 == Changelog ==
+= 1.1.2 =
+Preventing AppendAd plugin from being loaded via CloudFlare Rocket Loader
+
 = 1.1.1 =
 Added plugin and WordPress version indicators
 
