@@ -4,7 +4,7 @@ Donate link:
 Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
 Tested up to: 3.8.1
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 
 
 Create & manage new ad placements in seconds - no coding required
@@ -31,6 +31,9 @@ AppendAd is the first platform that enables publishers to create new ad placemen
 For any questions and support contact us at info@appendad.com
 
 == Upgrade Notice ==
+= 1.1.2 =
+Preventing AppendAd plugin from being loaded via CloudFlare Rocket Loader
+
 = 1.1.1 =
 Added plugin and WordPress version indicators
 

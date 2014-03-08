@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: AppendAd
 Plugin URI: http://www.appendad.com/
-Version: 1.1.1
+Version: 1.1.2
 Description: AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd certified ad networks.
 Author: AppendAd
 Author URI: http://www.appendad.com/
@@ -11,7 +11,7 @@ Author URI: http://www.appendad.com/
 /*
  * Update this variable to modify plugin version text in actual site tag 
  */
-$pluginVersion = '1.1.1';
+$pluginVersion = '1.1.2';
 
 // Add settings link on plugin page
 function your_plugin_settings_link($links) { 
@@ -67,7 +67,7 @@ function ssb_output()
 
     //adding the script result in a variable
     $output = "\n<!-- AppendAd Site Tag - Start -->\n";
-    $output .= "<script>\n(function(){\n";
+    $output .= "<script data-cfasync='false' type='text/javascript'>\n(function(){\n";
 
     /// condition showing of script according to settings saved
     if($ssb['acceler'] == "true"){ 
