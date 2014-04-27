@@ -3,7 +3,7 @@ Contributors: AppendAd
 Donate link:
 Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
-Tested up to: 3.8.1
+Tested up to: 3.9
 Stable tag: 1.1.2
 
 
