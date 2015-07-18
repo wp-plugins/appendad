@@ -1,21 +1,21 @@
 <?php
-/* Plugin Name: AppendAd
-Plugin URI: http://www.appendad.com/
-Version: 1.1.2
-Description: AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd certified ad networks.
-Author: AppendAd
-Author URI: http://www.appendad.com/
+/* Plugin Name: FirstImpression
+Plugin URI: http://www.firstimpression.io/
+Version: 1.3.0
+Description: FirstImpression is the first platform that allows publishers create different ad products anywhere on their website in seconds and with no coding.
+Author: FirstImpression
+Author URI: http://www.firstimpression.io/
 */
 
 
 /*
  * Update this variable to modify plugin version text in actual site tag 
  */
-$pluginVersion = '1.1.2';
+$pluginVersion = '1.3.0';
 
 // Add settings link on plugin page
 function your_plugin_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page=appendad">Settings</a>'; 
+  $settings_link = '<a href="options-general.php?page=firstimpression">Settings</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
 }
@@ -39,22 +39,15 @@ add_action('admin_menu', 'ssb_settings');
 //adding a page link in admin panel
 function ssb_settings()
 {
-	add_options_page( "AppendAd", "AppendAd", 'administrator', 'appendad', 'ssb_admin_function');
+	add_options_page( "FirstImpression", "FirstImpression", 'administrator', 'firstimpression', 'ssb_admin_function');
 	//this adds the page: parameters are: "page title", "link title", "role", "slug","function that shows the result"
 }
 
 
 
-//conditional printing the script based on synchronous or asynchronous
-if($ssb['synca']=="async"){
-	add_action( 'wp_footer', 'ssb_output_g' ); // if asynchronous then in footer
-	add_action( 'wp_footer', 'ssb_page_data' );
-}elseif($ssb['synca']=="sync"){
-	add_action( 'wp_head', 'ssb_output_g' ); //else if synchronous then in header
-        add_action( 'wp_footer', 'ssb_page_data' );
-}else  {
-	print_r($ssb);
-}
+//printing the script
+add_action('wp_head','ssb_output_g'); //print in header
+add_action('wp_footer','ssb_page_data'); //print in footer
 
 
 
@@ -66,43 +59,40 @@ function ssb_output()
     $ssb = get_option("ssb_options");
 
     //adding the script result in a variable
-    $output = "\n<!-- AppendAd Site Tag - Start -->\n";
-    $output .= "<script data-cfasync='false' type='text/javascript'>\n(function(){\n";
-
-    /// condition showing of script according to settings saved
-    if($ssb['acceler'] == "true"){ 
-        $output .= "var apd_accelerate=1;\n";
-    }
-    
-    /// condition showing of script according to settings saved
-    if($ssb['dynmic'] == "true"){
-        $output .="var apd_disabledynamic=1;\n";
-    }
-
-    $output .= "var apd = document.createElement('script');"
-            . "\napd.type = 'text/javascript'; apd.async = true;"
-            . "\napd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id=";
-
-    //adding of site id in output
-    $output .= $ssb['site_id'];
-
-
-    $output .= "';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();</script>";
-    
-     $output .= "\n<!-- AppendAd Site Tag - End -->\n\n";
-    //outpur created, now returning it back to the calling element !
+    $output = "\n<!--BEGIN FIRSTIMPRESSION TAG -->\n";
+    $output .= "<script data-cfasync='false' type='text/javascript'>\n";
+    $output .= "	if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
+    $output .= "	var adminMode = ((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1));\n";
+    $output .= "	window.apd_options = {\n";
+	$output .= "	\"accelerate\": 0,\n";    
+	$output .= "	\"dynamicElements\": 1,\n";
+	$output .= "	\"websiteId\": ".$ssb['site_id']."\n";
+	$output .= "	};\n";
+	$output .= "	(function() {\n";
+	$output .= "		var apd = document.createElement('script'); apd.type = 'text/javascript'; apd.async = true;\n";
+	$output .= "		if(adminMode){\n";
+	$output .= "			apd.src = 'https://ecdn.firstimpression.io/apd.js?id=' + apd_options.websiteId;\n";
+	$output .= "		}\n";
+	$output .= "		else{\n";
+	$output .= "			apd.src = (('https:' == document.location.protocol || window.parent.location!=window.location) ? 'https://' : 'http://') + 'ecdn.firstimpression.io/apd_client.js';\n";
+	$output .= "		}\n";
+	$output .= "		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);\n";
+	$output .= "	})();\n";
+    $output .= "</script>\n";
+    $output .= "<!-- END FIRSTIMPRESSION TAG -->\n";
+    //output created, now returning it back to the calling element !
     return $output;
 
 }
 
 function ssb_page_data_demo() {
     global $pluginVersion, $wp_version;
-    $output = "<!-- AppendAd Targeting - Start -->"
-            . "<div id='apdPageData' data-plugin-version='$pluginVersion' data-wp-version='$wp_version' style='display:none;visibility:hidden;'>"
-            . "<span id='apdPageData_categories'>[categories]</span>"
-            . "<span id='apdPageData_tags'>[tags]</span>"
-            . "<span id='apdPageData_author'>[author]</span>"
-            . "</div><!-- AppendAd Targeting - End -->";
+    $output = "<!-- FirstImpression Targeting - Start -->\n"
+            . "<div id='apdPageData' data-plugin-version='$pluginVersion' data-wp-version='$wp_version' style='display:none;visibility:hidden;'>\n"
+            . "<span id='apdPageData_categories'>[categories]</span>\n"
+            . "<span id='apdPageData_tags'>[tags]</span>\n"
+            . "<span id='apdPageData_author'>[author]</span>\n"
+            . "</div><!-- FirstImpression Targeting - End -->\n";
     
     echo $output;
 }
@@ -122,7 +112,7 @@ function ssb_page_data() {
     $display_name = get_the_author_meta('display_name');
     $display_name = ( empty($display_name) OR is_wp_error($display_name) ) ? '' : $display_name;
     
-    $output  = '<!-- AppendAd Targeting - Start -->';
+    $output  = '<!-- FirstImpression Targeting - Start -->';
     $output .= "\n" . '<div id="apdPageData" data-plugin-version="' . $pluginVersion . '" data-wp-version="' . $wp_version . '" style="display:none;visibility:hidden;">';  
     $output .= "\n\t" . '<span id="apdPageData_categories">' . $category_list . '</span>';
     
@@ -131,7 +121,7 @@ function ssb_page_data() {
         $output .= "\n\t" . '<span id="apdPageData_author">' . $display_name . '</span>';
     }
     
-    $output .= "\n" . "</div>\n<!-- AppendAd Targeting - End -->\n";
+    $output .= "\n" . "</div>\n<!-- FirstImpression Targeting - End -->\n";
     
     echo $output;
 }
@@ -155,9 +145,8 @@ function ssb_admin_function()
 	//here starts the html of form, cant document the html (Do you really need this ? do you!)
 	?>
 		<div class="wrap">
-			<?php screen_icon('plugins'); ?><h2>AppendAd Wordpress Site Tag Plugin</h2>
-<p>AppendAd is a tool which allows you to easily add monetizeable ad units to your site. Once you have added your site id, please visit <a href="http://www.appendad.com">AppendAd.com</a> for more information on setting the ads up on your sites.</p>
-
+			<?php screen_icon('plugins'); ?><h2>FirstImpression Wordpress Site Tag Plugin</h2>
+<p>FirstImpression is a tool which allows you to easily add monetizeable ad products to your site. This plugin will provide the integration to allow the placements on your site to be managed through FirstImpression's platform. Just add the site id you got from your account manager, click the "Updated Embedded Code" button and you are good to go.</p>
 				<table class="form-table">
 					<tr valign="top">
 						<th scope="row">
@@ -169,44 +158,12 @@ function ssb_admin_function()
 							<input type="text" id="site_id_vas" onchange="chTXT()" name="site_id_vas" value="<?php echo $ssb['site_id'];?>"  /><span id="setting-error-settings_error" class="error settings-error asd_error " style=" border-color: #c00;display: inline-block;display:none;background-color: #ffebe8;border: 1px solid #c00;padding: 0 3px;margin-left: 10px;border-radius: 4px;"><p style="padding: 1px;margin: 0;"><strong>Enter A Valid Number.</strong></p></span>
 						</td>
 					</tr>
-					<tr valign="top">
-						<th scope="row">
-							<label for="param_2">
-								Implementation Style:
-							</label>
-						</th>
-						<td>
-							<input id="parm1" type="radio" name="sync_async_vas" OnChange="chTXT()" value="sync"  <?php if($ssb['synca']=="sync"){echo "checked=checked";}?>checked="checked" />Synchronous<br />
-							<input id="parm2"  type="radio" name="sync_async_vas" OnChange="chTXT()" value="async" <?php if($ssb['synca']=="async"){echo "checked=checked";}?> />A-Synchronous
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">
-							<label for="acceler_vas">
-								Enable Accelerated Loading:
-							</label>
-						</th>
-						<td>
-							<input  type="checkbox" id="acceler_vas" OnChange="chTXT()" name="acceler_vas" <?php if($ssb['acceler']=="true"){echo "checked=checked";}?> />
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">
-							<label for="dynamic_vas">
-								Disable check for dynamic elements:
-							</label>
-						</th>
-						<td>
-							<input type="checkbox" id="dynamic_vas" OnChange="chTXT()" name="dynamic_vas" <?php if($ssb['dynmic']=="true"){echo "checked=checked";}?> />
-						</td>
-					</tr>
-
 				</table>
 				<p class="submit">
 					<input name="update_settings" id="submit_options_form" type="submit" class="button-primary vasu_btn" value="Updated Embedded Code" />
 				</p>
 
-				<div id="setting-error-settings_updated" class="updated settings-error asd_saved" style="display:none; width: 76%;"><p><strong>Settings saved.</strong></p></div><p>Click <a href="#"> here </a> to access our current Ad Placement gallery and create a new placement</p>
+				<div id="setting-error-settings_updated" class="updated settings-error asd_saved" style="display:none; width: 76%;"><p><strong>Settings saved.</strong></p></div><p>Click <a href="https://admin.firstimpression.io"> here </a> to login to your admin console on FirstImpression and manage your placements</p>
 
 				<p>The following code will be embedded in your site's template:<br />
 <textarea style="width: 77%;height: 280px;" class="result_demo"><?php echo htmlentities(ssb_output());echo htmlentities(ssb_page_data_demo());?></textarea></p>
@@ -224,23 +181,27 @@ function ssb_ajax_javascript() {
     //this function is providing the functionality of live realtime change of code in textarea
     function chTXT(){
                 //saving to variables
-        var tmp_dynamic_vas = document.getElementById('dynamic_vas').checked;
-        var tmp_acceler_vas = document.getElementById('acceler_vas').checked;
-        var tmp_async = document.getElementById('parm2').checked;
-        var tmp_synch_vas = jQuery('input:radio[name=sync_async_vas]:checked').val();
         var tmp_site_id_vas = document.getElementById('site_id_vas').value;
         
-        var output = "<!-- AppendAd Site Tag - Start -->\n&lt;scri"+"pt\&gt;\n(function(){\n";
-        if(tmp_acceler_vas){
-                output= output+ "var apd_accelerate=1;\n";
-        }
-        if(tmp_dynamic_vas){
-                output= output+ "var apd_disabledynamic=1;\n";
-        }
-        output = output+ "var apd = document.createElement('script');\napd.type = 'text/javascript'; apd.async = true;\napd.src = ('https:' == document.location.protocol || window.parent.location!=window.location ? 'https://secure' : 'http://cdn') + '.appendad.com/apd.js?id="+tmp_site_id_vas+"';";
-
-        output=output+ "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);})();&lt;/scr"+"ipt\&gt;" + '\n<!-- AppendAd Site Tag - End -->\n\n' + tags;
-
+        var output = "<!--BEGIN FIRSTIMPRESSION TAG -->\n&lt;scri"+"pt data-cfasync='false' type='text/javascript'\&gt;\n";
+        output = output+ "if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
+		output = output+ "var adminMode = ((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1));\n";
+		output = output+ "window.apd_options = {\n";
+		output = output+ " \"accelerate\": 0,\n";
+		output = output+ " \"dynamicElements\": 1,\n";
+		output = output+ " \"websiteId\": "+tmp_site_id_vas+"\n";
+        output = output+ "};\n";
+        output = output+ "(function() {\n";
+        output = output+ "var apd = document.createElement('script'); apd.type = 'text/javascript'; apd.async = true;\n";
+        output = output+ "if(adminMode){\n";
+        output = output+ "apd.src = 'https://ecdn.firstimpression.io/apd.js?id=' + apd_options.websiteId;\n";
+        output = output+ "}\n";
+        output = output+ "else{\n";
+        output = output+ "apd.src = (('https:' == document.location.protocol || window.parent.location!=window.location) ? 'https://' : 'http://') + 'ecdn.firstimpression.io/apd_client.js';";
+		output = output+ "}\n";
+		output = output+ "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(apd, s);\n";
+		output = output+ "})();\n";
+		output=output+ "&lt;/scr"+"ipt\&gt;" + '\n<!-- END FIRSTIMPRESSION TAG -->\n\n' + tags;
         jQuery('.result_demo').html(output);
 
     }
@@ -259,9 +220,6 @@ jQuery(document).ready(function($)
 		//clear the textarea
 		$('.result_demo').html(" ");
 		//save the values of form in variables
-		var dynamic_vas = document.getElementById('dynamic_vas').checked;
-		var acceler_vas = document.getElementById('acceler_vas').checked;
-		var synch_vas = $('input:radio[name=sync_async_vas]:checked').val();
 		var site_id_vas = document.getElementById('site_id_vas').value;
 
 		//verifcation for a valid number
@@ -270,9 +228,6 @@ jQuery(document).ready(function($)
 			//if verified, create a json varibale for sending
 			var data = {action: 'my_action',
 				a:site_id_vas,
-				b:acceler_vas,
-				c:synch_vas,
-				d:dynamic_vas
 			};
 			//use post method to send the data
 			$.post(ajaxurl, data, function(response)
@@ -307,9 +262,9 @@ add_action('wp_ajax_my_action', 'ssb_ajax_action');
 function ssb_ajax_action() {
 	global $wpdb; // this is how you get access to the database
 
-	$a = $_POST['a'];	$b = $_POST['b'];	$c = $_POST['c'];	$d = $_POST['d']; //copying the received data in variables
+	$a = $_POST['a']; //copying the received data in variables
 
-	$ssb_settings = array('site_id'=>$a,'acceler'=>$b,'synca'=>$c,'dynmic'=>$d);// creating a settings array from the variables
+	$ssb_settings = array('site_id'=>$a);// creating a settings array from the variables
 
 	update_option("ssb_options", $ssb_settings); //save the settings
 

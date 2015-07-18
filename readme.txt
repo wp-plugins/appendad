@@ -1,17 +1,17 @@
 === Plugin Name ===
-Contributors: AppendAd
+Contributors: FirstImpression
 Donate link:
-Tags: AppendAd, advertisement, placements, ad, ads, adsense, ad placements
+Tags: AppendAd, FirstImpression, advertisement, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
 Tested up to: 3.9
-Stable tag: 1.1.2
+Stable tag: 1.3.0
 
 
 Create & manage new ad placements in seconds - no coding required
 
 == Description ==
 
-AppendAd is the first platform that enables publishers to create new ad placements anywhere on their website in seconds and in any format, without programmers or graphic designers. These placements can be monetized with the publisher's existing ad inventory or through AppendAd's certified ad networks.
+FirstImpression is the first platform that allows publishers create different ad products anywhere on their website in seconds and with no coding. The ad products can then be monetized though FirstImpressions's certified ad networks.
 
 
 == Installation ==
@@ -21,14 +21,18 @@ AppendAd is the first platform that enables publishers to create new ad placemen
 
 = How to use =
 
-1. AppendAd plugin is available from the WordPress admin panel settings under the Settings menu.
-2. Just enter the site ID you've been given from AppendAd's platform and hit the save changes button.
-3. You're all set! Now navigate to your AppendAd admin at http://admin.appendad.com and start creating new placements in seconds.
+1. FirsImpression plugin is available from the WordPress admin panel settings under the Settings menu.
+2. Just enter the site ID you've been given from FirsImpression's platform and hit the save changes button.
+3. You're all set! Now navigate to your FirsImpression admin at https://admin.firstimpression.io and start creating new placements in seconds.
 
 
 == Frequently Asked Questions ==
 
-For any questions and support contact us at info@appendad.com
+For any questions and support contact us at info@firstimpression.io
+
+== Upgrade Notice ==
+= 1.3.0 =
+Changing the plugin name from AppendAd to FirstImpression. Removing the accelerated and dynamic elements options which are now controled via FirstImpression's platform.
 
 == Upgrade Notice ==
 = 1.1.2 =
