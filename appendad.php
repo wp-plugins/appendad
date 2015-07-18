@@ -44,10 +44,13 @@ function ssb_settings()
 }
 
 
+if ( ! is_admin() ) {
+     //printing the script
+	add_action('wp_head','ssb_output_g'); //print in header
+	add_action('wp_footer','ssb_page_data'); //print in footer
+}
 
-//printing the script
-add_action('wp_head','ssb_output_g'); //print in header
-add_action('wp_footer','ssb_page_data'); //print in footer
+
 
 
 
