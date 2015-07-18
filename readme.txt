@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: FirstImpression
 Donate link:
-Tags: AppendAd, FirstImpression, advertisement, placements, ad, ads, adsense, ad placements
+Tags: AppendAd, FirstImpression, First Impression, advertisement, advertisements, ad product, ad products, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
-Tested up to: 3.9
+Tested up to: 4.2.2
 Stable tag: 1.3.0
 
 
