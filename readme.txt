@@ -4,7 +4,7 @@ Donate link:
 Tags: AppendAd, FirstImpression, First Impression, advertisement, advertisements, ad product, ad products, placements, ad, ads, adsense, ad placements
 Requires at least: 2.5
 Tested up to: 4.2.2
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 
 
 Create & manage new ad placements in seconds - no coding required
@@ -31,10 +31,12 @@ FirstImpression is the first platform that allows publishers create different ad
 For any questions and support contact us at info@firstimpression.io
 
 == Upgrade Notice ==
+= 1.3.1 =
+Bug fixes.
+
 = 1.3.0 =
 Changing the plugin name from AppendAd to FirstImpression. Removing the accelerated and dynamic elements options which are now controled via FirstImpression's platform.
 
-== Upgrade Notice ==
 = 1.1.2 =
 Preventing AppendAd plugin from being loaded via CloudFlare Rocket Loader
 

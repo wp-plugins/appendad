@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: FirstImpression
 Plugin URI: http://www.firstimpression.io/
-Version: 1.3.0
+Version: 1.3.1
 Description: FirstImpression is the first platform that allows publishers create different ad products anywhere on their website in seconds and with no coding.
 Author: FirstImpression
 Author URI: http://www.firstimpression.io/
@@ -11,7 +11,10 @@ Author URI: http://www.firstimpression.io/
 /*
  * Update this variable to modify plugin version text in actual site tag 
  */
-$pluginVersion = '1.3.0';
+$pluginVersion = '1.3.1';
+
+// refer to uninstall hook if deleted 
+register_uninstall_hook('uninstall.php', '');
 
 // Add settings link on plugin page
 function your_plugin_settings_link($links) { 
@@ -64,16 +67,15 @@ function ssb_output()
     //adding the script result in a variable
     $output = "\n<!--BEGIN FIRSTIMPRESSION TAG -->\n";
     $output .= "<script data-cfasync='false' type='text/javascript'>\n";
-    $output .= "	if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
-    $output .= "	var adminMode = ((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1));\n";
     $output .= "	window.apd_options = {\n";
 	$output .= "	\"accelerate\": 0,\n";    
 	$output .= "	\"dynamicElements\": 1,\n";
-	$output .= "	\"websiteId\": ".$ssb['site_id']."\n";
+	$output .= "	\"websiteId\": ". ( isset($ssb['site_id']) ? $ssb['site_id'] : 0 ) ."\n";
 	$output .= "	};\n";
+    $output .= "	if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
 	$output .= "	(function() {\n";
 	$output .= "		var apd = document.createElement('script'); apd.type = 'text/javascript'; apd.async = true;\n";
-	$output .= "		if(adminMode){\n";
+	$output .= "		if((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1)){\n";
 	$output .= "			apd.src = 'https://ecdn.firstimpression.io/apd.js?id=' + apd_options.websiteId;\n";
 	$output .= "		}\n";
 	$output .= "		else{\n";
@@ -90,12 +92,7 @@ function ssb_output()
 
 function ssb_page_data_demo() {
     global $pluginVersion, $wp_version;
-    $output = "<!-- FirstImpression Targeting - Start -->\n"
-            . "<div id='apdPageData' data-plugin-version='$pluginVersion' data-wp-version='$wp_version' style='display:none;visibility:hidden;'>\n"
-            . "<span id='apdPageData_categories'>[categories]</span>\n"
-            . "<span id='apdPageData_tags'>[tags]</span>\n"
-            . "<span id='apdPageData_author'>[author]</span>\n"
-            . "</div><!-- FirstImpression Targeting - End -->\n";
+    $output = "<!-- FirstImpression Targeting - Start --> <div id='apdPageData' data-plugin-version='$pluginVersion' data-wp-version='$wp_version' style='display:none;visibility:hidden;'> <span id='apdPageData_categories'>[categories]</span> <span id='apdPageData_tags'>[tags]</span> <span id='apdPageData_author'>[author]</span> </div><!-- FirstImpression Targeting - End -->";
     
     echo $output;
 }
@@ -140,6 +137,7 @@ function ssb_output_g()
 //biggest function but worth it
 function ssb_admin_function()
 {
+	ssb_ajax_javascript();
 	//check if the user is allowed to edit wordress settings
 	if(!current_user_can('manage_options'))
 		wp_die('You do not have sufficient permissions to access this page.');
@@ -158,12 +156,12 @@ function ssb_admin_function()
 							</label>
 						</th>
 						<td>
-							<input type="text" id="site_id_vas" onchange="chTXT()" name="site_id_vas" value="<?php echo $ssb['site_id'];?>"  /><span id="setting-error-settings_error" class="error settings-error asd_error " style=" border-color: #c00;display: inline-block;display:none;background-color: #ffebe8;border: 1px solid #c00;padding: 0 3px;margin-left: 10px;border-radius: 4px;"><p style="padding: 1px;margin: 0;"><strong>Enter A Valid Number.</strong></p></span>
+							<input type="text" id="site_id_vas" name="site_id_vas" value="<?php echo $ssb['site_id'];?>"  /><span id="setting-error-settings_error" class="error settings-error asd_error " style=" border-color: #c00;display: inline-block;display:none;background-color: #ffebe8;border: 1px solid #c00;padding: 0 3px;margin-left: 10px;border-radius: 4px;"><p style="padding: 1px;margin: 0;"><strong>Enter A Valid Number.</strong></p></span>
 						</td>
 					</tr>
 				</table>
 				<p class="submit">
-					<input name="update_settings" id="submit_options_form" type="submit" class="button-primary vasu_btn" value="Updated Embedded Code" />
+					<input name="update_settings" id="submit_options_form" type="button" class="button-primary vasu_btn" value="Updated Embedded Code" />
 				</p>
 
 				<div id="setting-error-settings_updated" class="updated settings-error asd_saved" style="display:none; width: 76%;"><p><strong>Settings saved.</strong></p></div><p>Click <a href="https://admin.firstimpression.io"> here </a> to login to your admin console on FirstImpression and manage your placements</p>
@@ -175,7 +173,7 @@ function ssb_admin_function()
 }
 
 // this will add javascript in admin required for ajax
-add_action( 'admin_footer', 'ssb_ajax_javascript' );
+// add_action( 'admin_footer', 'ssb_ajax_javascript' ); // carnivore1
 function ssb_ajax_javascript() {
     
 ?>
@@ -183,20 +181,21 @@ function ssb_ajax_javascript() {
     var tags = "<?=ssb_page_data_demo()?>";
     //this function is providing the functionality of live realtime change of code in textarea
     function chTXT(){
-                //saving to variables
-        var tmp_site_id_vas = document.getElementById('site_id_vas').value;
+        //saving to variables
+        var site_id_parser = document.getElementById('site_id_vas').value;
+        var tmp_site_id_vas = 0;
+        if (site_id_parser != null) tmp_site_id_vas = site_id_parser;
         
         var output = "<!--BEGIN FIRSTIMPRESSION TAG -->\n&lt;scri"+"pt data-cfasync='false' type='text/javascript'\&gt;\n";
-        output = output+ "if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
-		output = output+ "var adminMode = ((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1));\n";
 		output = output+ "window.apd_options = {\n";
 		output = output+ " \"accelerate\": 0,\n";
 		output = output+ " \"dynamicElements\": 1,\n";
-		output = output+ " \"websiteId\": "+tmp_site_id_vas+"\n";
+		output = output+ " \"websiteId\": "+ tmp_site_id_vas+"\n";
         output = output+ "};\n";
+        output = output+ "if (window.location.hash.indexOf('apdAdmin')!= -1){if(typeof(Storage) !== 'undefined') {localStorage.apdAdmin = 1;}}\n";
         output = output+ "(function() {\n";
         output = output+ "var apd = document.createElement('script'); apd.type = 'text/javascript'; apd.async = true;\n";
-        output = output+ "if(adminMode){\n";
+        output = output+ "if((typeof(Storage) == 'undefined') || (localStorage.apdAdmin == 1)){\n";
         output = output+ "apd.src = 'https://ecdn.firstimpression.io/apd.js?id=' + apd_options.websiteId;\n";
         output = output+ "}\n";
         output = output+ "else{\n";
@@ -229,12 +228,14 @@ jQuery(document).ready(function($)
 		if(!isNaN(site_id_vas) && site_id_vas!="")
 		{
 			//if verified, create a json varibale for sending
-			var data = {action: 'my_action',
-				a:site_id_vas,
+			var data = {
+				action: 'my_action',
+				a:site_id_vas
 			};
 			//use post method to send the data
 			$.post(ajaxurl, data, function(response)
 			{
+				console.log(response + " tags:" + tags);
 				//show the response in teatarea
 				$('.result_demo').html(response.trim() + "\n\n" + tags);
 				//show "saved" message
@@ -245,6 +246,7 @@ jQuery(document).ready(function($)
 		{
 			//if verification fails, show the error message
 			$('.asd_error').css("display", "inline-block");
+			$('.asd_saved').hide('slow');
 		}
 	});
 
